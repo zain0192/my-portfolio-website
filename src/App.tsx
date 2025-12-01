@@ -14,6 +14,22 @@ import Timeline from './components/sections/Timeline';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if device is mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     // Any other initialization logic if needed
   }, [isLoading]);
@@ -25,11 +41,13 @@ function App() {
       {!isLoading && (
         <LenisProvider>
           <div>
-            <TargetCursor
-              spinDuration={5}
-              hideDefaultCursor={true}
-              parallaxOn={true}
-            />
+            {!isMobile && (
+              <TargetCursor
+                spinDuration={5}
+                hideDefaultCursor={true}
+                parallaxOn={true}
+              />
+            )}
             <ScrollProgress />
             <Navbar />
             <main>

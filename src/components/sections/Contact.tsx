@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { PaperPlaneRightIcon, GithubLogoIcon, LinkedinLogoIcon, TwitterLogoIcon } from '@phosphor-icons/react';
+import { PaperPlaneRightIcon, GithubLogoIcon, LinkedinLogoIcon, EnvelopeSimple, DownloadSimple } from '@phosphor-icons/react';
 
 const Contact = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -9,15 +9,19 @@ const Contact = () => {
       {/* Floating Social Icons - Desktop Only */}
       <div className="hidden md:flex fixed left-2 top-1/2 -translate-y-1/2 flex-col gap-2 z-50">
         {[
-          { icon: <GithubLogoIcon size={24} />, href: '#' },
-          { icon: <LinkedinLogoIcon size={24} />, href: '#' },
-          { icon: <TwitterLogoIcon size={24} />, href: '#' },
+          { icon: <GithubLogoIcon size={24} />, href: '#', tooltip: 'Check out my GitHub' },
+          { icon: <LinkedinLogoIcon size={24} />, href: '#', tooltip: 'Check out my LinkedIn' },
+          { icon: <EnvelopeSimple size={24} />, href: 'mailto:zain@example.com', tooltip: 'Email Me' },
+          { icon: <DownloadSimple size={24} />, href: '#', tooltip: 'Download CV' },
         ].map((social, i) => (
           <a
             key={i}
             href={social.href}
-            className="glass flex h-10 w-10 items-center justify-center rounded-full text-white transition-all hover:scale-110 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] hover:shadow-[0_0_15px_var(--color-accent)] cursor-target cursor-none"
+            className="group glass flex h-10 w-10 items-center justify-center rounded-full text-white transition-all hover:scale-110 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] hover:shadow-[0_0_15px_var(--color-accent)] cursor-target cursor-none relative"
           >
+            <span className="absolute left-full ml-4 whitespace-nowrap rounded-md bg-black/80 px-3 py-1.5 text-sm font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none backdrop-blur-sm border border-white/10">
+              {social.tooltip}
+            </span>
             {social.icon}
           </a>
         ))}

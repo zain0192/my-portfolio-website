@@ -3,9 +3,11 @@ import gsap from 'gsap';
 import BlurText from '../UI/BlurText';
 import LightRays from '../UI/LightRays';
 import CircularText from '../UI/CircularText';
+import { useLenis } from '../../context/LenisContext';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
+  const { lenis } = useLenis();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -45,6 +47,16 @@ const Hero = () => {
     return () => ctx.revert();
   }, []);
 
+  const handleScroll = (e: React.MouseEvent<HTMLElement>, targetId: string) => {
+    e.preventDefault();
+    if (lenis) {
+      lenis.scrollTo(targetId);
+    } else {
+      const element = document.querySelector(targetId);
+      element?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section
       ref={heroRef}
@@ -76,22 +88,16 @@ const Hero = () => {
           className="hero-text mb-6 text-5xl font-bold leading-tight text-white md:text-7xl lg:text-8xl Justify-center"
         />
         <BlurText
-          text="Crafting immersive digital experiences with cutting-edge technology"
+          text="Your go‑to guy for full‑stack magic."
           delay={300}
           animateBy="words"
           direction="top"
-          className="hero-text mx-auto max-w-2xl text-lg text-gray-400 md:text-xl text-center"
-        />
-        <BlurText
-          text="and modern design."
-          delay={350}
-          animateBy="words"
-          direction="top"
-          className="hero-text mx-auto mb-10 max-w-2xl text-lg text-gray-400 md:text-xl text-center"
+          className="hero-text mx-auto mb-8 max-w-2xl text-lg text-gray-400 md:text-xl text-center"
         />
         <div className="hero-btn flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
             href="#projects"
+            onClick={(e) => handleScroll(e, '#projects')}
             className="group relative overflow-hidden rounded-full bg-white px-8 py-3 text-black transition-all hover:scale-105 cursor-target cursor-none"
           >
             <span className="relative z-10 font-bold">Explore Projects</span>
@@ -99,6 +105,7 @@ const Hero = () => {
           </a>
           <a
             href="#contact"
+            onClick={(e) => handleScroll(e, '#contact')}
             className="rounded-full border border-white/20 bg-white/5 px-8 py-3 font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-target cursor-none"
           >
             Hire Me
@@ -107,7 +114,10 @@ const Hero = () => {
       </div>
       
       {/* Scroll Indicator */}
-      <div className="absolute left-1/2 bottom-0 translate-x-[-50%] translate-y-[40%] cursor-none">
+      <div 
+        className="absolute left-1/2 bottom-0 translate-x-[-50%] translate-y-[40%] cursor-pointer z-20"
+        onClick={(e) => handleScroll(e, '#about')}
+      >
         <CircularText
           text="SCROLL*DOWN*BUDDY*"
           onHover="speedUp"

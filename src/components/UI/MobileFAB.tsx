@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GithubLogoIcon, LinkedinLogoIcon, TwitterLogoIcon, ShareNetworkIcon } from '@phosphor-icons/react';
+import { GithubLogoIcon, LinkedinLogoIcon, ShareNetworkIcon, EnvelopeSimple, DownloadSimple } from '@phosphor-icons/react';
 
 const MobileFAB = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const socialLinks = [
-    { icon: <GithubLogoIcon size={20} weight="bold" />, href: '#', label: 'GitHub' },
-    { icon: <LinkedinLogoIcon size={20} weight="bold" />, href: '#', label: 'LinkedIn' },
-    { icon: <TwitterLogoIcon size={20} weight="bold" />, href: '#', label: 'Twitter' },
+    { icon: <GithubLogoIcon size={20} weight="bold" />, href: '#', label: 'GitHub', tooltip: 'Check out my GitHub' },
+    { icon: <LinkedinLogoIcon size={20} weight="bold" />, href: '#', label: 'LinkedIn', tooltip: 'Check out my LinkedIn' },
+    { icon: <EnvelopeSimple size={20} weight="bold" />, href: 'mailto:zain@example.com', label: 'Email', tooltip: 'Email Me' },
+    { icon: <DownloadSimple size={20} weight="bold" />, href: '#', label: 'Download Resume', tooltip: 'Download CV' },
   ];
 
   return (
@@ -41,9 +42,12 @@ const MobileFAB = () => {
                     duration: 0.2
                   }
                 }}
-                className="glass flex h-12 w-12 items-center justify-center rounded-full text-white transition-all hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] hover:shadow-[0_0_15px_var(--color-accent)]"
+                className="group glass flex h-12 w-12 items-center justify-center rounded-full text-white transition-all hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] hover:shadow-[0_0_15px_var(--color-accent)] relative"
                 aria-label={social.label}
               >
+                <span className="absolute right-full mr-4 whitespace-nowrap rounded-md bg-black/80 px-3 py-1.5 text-sm font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none backdrop-blur-sm border border-white/10">
+                  {social.tooltip}
+                </span>
                 {social.icon}
               </motion.a>
             ))}
