@@ -26,6 +26,13 @@ const Contact = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Check if Supabase is properly configured
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      setSubmitStatus('error');
+      setErrorMessage('Contact form is temporarily unavailable. Please try again later.');
+      return;
+    }
     
     // Reset status
     setSubmitStatus('idle');
@@ -71,7 +78,7 @@ const Contact = () => {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="relative py-10 md:pt-20 mt:pb-20">
+    <section ref={sectionRef} id="contact" className="relative py-10 md:pt-20 md:pb-20">
       {/* Floating Social Icons - Desktop Only */}
       <div className="hidden md:flex fixed left-2 top-1/2 -translate-y-1/2 flex-col gap-2 z-50">
         {[
