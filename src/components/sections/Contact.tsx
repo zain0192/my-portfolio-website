@@ -1,8 +1,74 @@
-import { useRef } from 'react';
-import { PaperPlaneRightIcon, GithubLogoIcon, LinkedinLogoIcon, EnvelopeSimple, DownloadSimple } from '@phosphor-icons/react';
+import { useRef, useState, type FormEvent } from 'react';
+import { PaperPlaneRightIcon, GithubLogoIcon, LinkedinLogoIcon, EnvelopeSimpleIcon, DownloadSimpleIcon, CheckCircleIcon, WarningCircleIcon } from '@phosphor-icons/react';
+import { supabase } from '../../lib/supabase';
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
 
 const Contact = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    // Reset status
+    setSubmitStatus('idle');
+    setErrorMessage('');
+    
+    // Validate all fields are filled
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setSubmitStatus('error');
+      setErrorMessage('All fields are required');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('contact-form')
+        .insert([
+          {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            message: formData.message.trim(),
+          },
+        ]);
+
+      if (error) throw error;
+
+      // Success
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus('idle');
+      }, 5000);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+      setErrorMessage('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section ref={sectionRef} id="contact" className="relative py-10 md:pt-20 mt:pb-20">
@@ -11,8 +77,8 @@ const Contact = () => {
         {[
           { icon: <GithubLogoIcon size={24} />, href: '#', tooltip: 'Check out my GitHub' },
           { icon: <LinkedinLogoIcon size={24} />, href: '#', tooltip: 'Check out my LinkedIn' },
-          { icon: <EnvelopeSimple size={24} />, href: 'mailto:zain@example.com', tooltip: 'Email Me' },
-          { icon: <DownloadSimple size={24} />, href: '#', tooltip: 'Download CV' },
+          { icon: <EnvelopeSimpleIcon size={24} />, href: 'mailto:zain@example.com', tooltip: 'Email Me' },
+          { icon: <DownloadSimpleIcon size={24} />, href: '#', tooltip: 'Download CV' },
         ].map((social, i) => (
           <a
             key={i}
@@ -39,46 +105,75 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <form className="contact-item glass rounded-2xl p-8 md:p-10">
+          <form onSubmit={handleSubmit} className="contact-item glass rounded-2xl p-8 md:p-10">
+            {/* Success Message */}
+            {submitStatus === 'success' && (
+              <div className="mb-6 flex items-center gap-2 rounded-lg bg-green-500/10 border border-green-500/20 px-4 py-3 text-green-400">
+                <CheckCircleIcon size={20} weight="fill" />
+                <span>Message sent successfully! I'll get back to you soon.</span>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {submitStatus === 'error' && (
+              <div className="mb-6 flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-3 text-red-400">
+                <WarningCircleIcon size={20} weight="fill" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
             <div className="mb-6">
               <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-300">
-                Name
+                Name <span className="text-[var(--color-accent)]">*</span>
               </label>
               <input
                 type="text"
                 id="name"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] cursor-target cursor-none"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                disabled={isSubmitting}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] cursor-target cursor-none disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="John Doe"
               />
             </div>
             <div className="mb-6">
               <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-300">
-                Email
+                Email <span className="text-[var(--color-accent)]">*</span>
               </label>
               <input
                 type="email"
                 id="email"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] cursor-target cursor-none"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                disabled={isSubmitting}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] cursor-target cursor-none disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="john@example.com"
               />
             </div>
             <div className="mb-6">
               <label htmlFor="message" className="mb-2 block text-sm font-medium text-gray-300">
-                Message
+                Message <span className="text-[var(--color-accent)]">*</span>
               </label>
               <textarea
                 id="message"
                 rows={4}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] cursor-target cursor-none"
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+                disabled={isSubmitting}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] cursor-target cursor-none disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Tell me about your project..."
               />
             </div>
             <button
               type="submit"
-              className="group flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 font-bold text-black transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_var(--color-accent)] cursor-target cursor-none"
+              disabled={isSubmitting}
+              className="group flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 font-bold text-black transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_var(--color-accent)] cursor-target cursor-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              Send Message
-              <PaperPlaneRightIcon size={20} weight="bold" className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+              <PaperPlaneRightIcon size={20} weight="bold" />
             </button>
           </form>
         </div>

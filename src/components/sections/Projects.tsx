@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRightIcon, GithubLogoIcon } from '@phosphor-icons/react';
+import { ArrowRightIcon, AppStoreLogo, GooglePlayLogo } from '@phosphor-icons/react';
 import { useLenis } from '../../context/LenisContext';
+import BQ from '../../assets/bq.png';
+import Cleoparda from '../../assets/cleo.png';
+import Mahya from '../../assets/mahya.png';
+import Teler from '../../assets/teler.png';
+import Jobz from '../../assets/jobz.png';
 
 const Projects = () => {
   const [selectedTab, setSelectedTab] = useState('All');
@@ -11,51 +16,61 @@ const Projects = () => {
   const projects = [
     {
       id: 1,
-      title: 'Neon Dashboard',
-      desc: 'A futuristic analytics dashboard with real-time data visualization.',
-      tech: ['React', 'D3.js', 'Tailwind'],
+      title: 'InvoicePop - An Invoice Management System',
+      desc: 'A modern invoice management system built with React, Firebase and Tailwind CSS.',
+      tech: ['React', 'Firebase', 'Tailwind'],
       category: 'React',
       image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?fit=crop&w=800&q=80',
+      link: '#',
     },
     {
       id: 2,
-      title: 'E-Commerce AI',
-      desc: 'AI-powered shopping assistant with personalized recommendations.',
-      tech: ['Next.js', 'OpenAI', 'Stripe'],
+      title: 'The Teler - AI-Powered News Aggregator',
+      desc: 'An AI-powered news aggregator built with React Native and Supabase using OpenRouter API.',
+      tech: ['React Native', 'Supabase', 'OpenRouter'],
       category: 'React',
-      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?fit=crop&w=800&q=80',
+      image: Teler,
+      link: '#',
+      appStore: '#',
+      playStore: '#',
     },
     {
       id: 3,
-      title: 'Luxury Brand Store',
-      desc: 'High-end fashion e-commerce store with custom theme.',
-      tech: ['Shopify', 'Liquid', 'JS'],
-      category: 'Shopify',
-      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?fit=crop&w=800&q=80',
+      title: '360 Jobz - Blue and White Collar Job Platform',
+      desc: 'A job platform built with React Native and Firebase.',
+      tech: ['React Native', 'Firebase'],
+      category: 'React',
+      image: Jobz,
+      link: '#',
+      appStore: '#',
+      playStore: '#',
     },
     {
       id: 4,
-      title: 'Corporate Portfolio',
-      desc: 'Custom WordPress theme for a tech consultancy firm.',
-      tech: ['WordPress', 'PHP', 'ACF'],
+      title: 'Mahya Jewellery - E-commerce Website',
+      desc: 'An e-commerce website built with Wordpress.',
+      tech: ['WordPress', 'Woocommerce', 'PHP'],
       category: 'WordPress',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?fit=crop&w=800&q=80',
+      image: Mahya,
+      link: '#',
     },
     {
       id: 5,
-      title: 'Immersive 3D World',
-      desc: 'A 3D portfolio experience built with Three.js.',
-      tech: ['Three.js', 'React Three Fiber'],
-      category: 'React',
-      image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?fit=crop&w=800&q=80',
+      title: 'Cleoparda.co - E-commerce Website',
+      desc: 'An e-commerce website built with Shopify.',
+      tech: ['Shopify', 'React', 'GraphQL'],
+      category: 'Shopify',
+      image: Cleoparda,
+      link: '#',
     },
     {
       id: 6,
-      title: 'Artisan Shop',
-      desc: 'Handcrafted goods store with custom checkout flow.',
-      tech: ['Shopify', 'React', 'GraphQL'],
-      category: 'Shopify',
-      image: 'https://images.unsplash.com/photo-1472851294608-415522f96319?fit=crop&w=800&q=80',
+      title: 'Bookkeeping Qatar - A Bookkeeping Service Website',
+      desc: 'A bookkeeping service website built with WordPress.',
+      tech: ['WordPress', 'PHP', 'ACF'],
+      category: 'WordPress',
+      image: BQ,
+      link: '#',
     },
   ];
 
@@ -117,9 +132,9 @@ const Projects = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                className="group relative flex h-[400px] flex-col overflow-hidden rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--color-accent)]/50 transition-colors"
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--color-accent)]/50 transition-colors"
               >
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-56 shrink-0 overflow-hidden">
                   <div className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/0 z-10" />
                   <img
                     src={project.image}
@@ -141,21 +156,44 @@ const Projects = () => {
                   </div>
 
                   <h3 className="mb-2 text-2xl font-bold text-white">{project.title}</h3>
-                  <p className="mb-6 text-sm text-gray-400">{project.desc}</p>
+                  <p className="mb-6 text-sm text-gray-400 opacity-90">{project.desc}</p>
 
-                  <div className="mt-auto flex items-center justify-between">
-                    <a
-                      href="#"
-                      className="flex items-center gap-2 text-sm font-medium text-white transition-colors hover:text-[var(--color-accent)]"
-                    >
-                      View Project <ArrowRightIcon />
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-400 transition-colors hover:text-white"
-                    >
-                      <GithubLogoIcon size={24} />
-                    </a>
+                  <div className="mt-auto flex items-center justify-between gap-4 pt-4">
+                    {project.link ? (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-2 text-sm font-medium text-white transition-colors hover:text-[var(--color-accent)]"
+                      >
+                        Visit Website <ArrowRightIcon />
+                      </a>
+                    ) : <div />}
+                    
+                    <div className="flex items-center gap-3">
+                      {project.appStore && (
+                        <a
+                          href={project.appStore}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-gray-400 transition-colors hover:text-white"
+                          title="Download on App Store"
+                        >
+                          <AppStoreLogo size={24} />
+                        </a>
+                      )}
+                      {project.playStore && (
+                        <a
+                          href={project.playStore}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-gray-400 transition-colors hover:text-white"
+                          title="Get it on Google Play"
+                        >
+                          <GooglePlayLogo size={24} />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </motion.div>

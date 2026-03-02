@@ -226,7 +226,7 @@ const About = () => {
               About <span className="text-[var(--color-accent)]">Me</span>
             </h2>
             <p className="about-content mb-8 text-lg leading-relaxed text-gray-400">
-              I'm a passionate software engineer with a knack for creating visually stunning and highly functional web applications. With a strong foundation in modern web technologies, I strive to bridge the gap between design and engineering.
+              I’m a dynamic Software Engineer with 6 years of driving innovation across full-stack development, cloud technologies, and agile practices.I craft scalable, high-performance systems that empower businesses to thrive. Collaboration is my superpower, and I thrive in cross-functional teams where ideas spark into breakthrough results. Fueled by passion for solving complex technical challenges, I’m ready to channel my expertise and leadership into cutting-edge projects that push boundaries and redefine what’s possible
             </p>
           </div>
         </div>
